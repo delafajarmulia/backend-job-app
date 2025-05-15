@@ -1,8 +1,8 @@
 import { Model, model,Schema } from "mongoose";
 
 interface categoryDocument {
-    name: String,
-    description?: String,
+    name: string,
+    description?: string,
     createdAt: Date,
     updatedAt: Date
 }
@@ -22,5 +22,14 @@ const CategorySchema = new Schema<categoryDocument>({
         timestamps: true
     }
 )
+
+CategorySchema.virtual('jobs', {
+    ref: 'Job',
+    localField: '_id',
+    foreignField: 'category'
+})
+
+CategorySchema.set('toObject', { virtuals: true })
+CategorySchema.set('toJSON', { virtuals: true})
 
 export default model("Category", CategorySchema) as Model<categoryDocument>

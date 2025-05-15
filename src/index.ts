@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 
 import AuthRouter from './router/authRoute';
 import CategoryRouter from './router/categoryRoute';
+import JobRouter from './router/JobRoute';
 
 const app = express();
 
@@ -21,6 +22,7 @@ const mainURI = '/api/v1'
 
 app.use(mainURI + '/auth', AuthRouter)
 app.use(mainURI + '/category', CategoryRouter)
+app.use(mainURI + '/jobs', JobRouter)
 
 app.listen(PORT, () => {
     console.log('this app listening on port ' + PORT)

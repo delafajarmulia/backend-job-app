@@ -61,7 +61,7 @@ export const deleteDetailCategory = async(req: Request, res: Response) => {
         return
     }
 
-    const categoryUpdated = await Category.findByIdAndDelete(req.params.id)
+    const categoryDeleted = await Category.findByIdAndDelete(req.params.id)
 
     res.status(200).json({
         message: 'Berhasil Hapus'
