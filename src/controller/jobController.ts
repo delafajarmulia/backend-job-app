@@ -5,6 +5,21 @@ import { AuthRequest } from "../utils/types"
 import User, { userDocument } from "../models/User"
 import { model, Types } from "mongoose"
 
+interface JobSummary {
+    _id: string;
+    title: string;
+    description: string;
+    category: string;
+    salary: string;
+    jobType: string;
+    benefits: string;
+    requirements: string;
+    city: string;
+    address: string;
+    phone: string;
+    remote: boolean;
+}
+
 export const createJob = async(req: Request, res: Response) => {
     const newJob = req.body
 
@@ -104,24 +119,10 @@ export const getAllJobsByOwner = async(req: AuthRequest<any, any, any, any>, res
                     }) as userDocument || null;
 
     if(!user){
-        res.status(404).json({ message: 'tak de' })
+        res.status(404).json({ message: 'User tidak ditemukan' })
     }
 
     const appliedJobs = user.applyJobs ?? [];
-    interface JobSummary {
-        _id: string;
-        title: string;
-        description: string;
-        category: string;
-        salary: string;
-        jobType: string;
-        benefits: string;
-        requirements: string;
-        city: string;
-        address: string;
-        phone: string;
-        remote: boolean;
-    }
 
     const result: JobSummary[] = appliedJobs
         .filter(app => app.job && typeof app.job !== 'string' && 'title' in app.job)
@@ -168,4 +169,21 @@ export const getAllJobsByOwner = async(req: AuthRequest<any, any, any, any>, res
         jobs: result
     })
     return
+}
+
+export const getDetailJobByOwner = async(req: AuthRequest<any, any, any, any>, res: Response) => {
+    const jobId = req.params.jobId
+    const job = await Job.findById(jobId).populate({
+        path: 'applyJobs',
+        select: '_id job fullname resumeUrl contactPhone',
+        populate: {
+            path: 'user',
+            select: '_id name email'
+        }
+    })
+    
+    res.status(200).json({
+        message: 'Detail Job Owner',
+        job
+    })
 }
