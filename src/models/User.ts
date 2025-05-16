@@ -47,4 +47,13 @@ userSchema.methods.comparePassword = async function (password) {
     return result
 }
 
+userSchema.virtual('applyJobs', {
+    ref: 'ApplyJob',
+    localField: '_id',
+    foreignField: 'user'
+})
+
+userSchema.set('toObject', { virtuals: true })
+userSchema.set('toJSON', { virtuals: true })
+
 export default model("User", userSchema) as Model<userDocument, {}, Methods>

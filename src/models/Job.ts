@@ -77,4 +77,13 @@ const JobSchema = new Schema(
     }
 )
 
+JobSchema.virtual('applyJobs', {
+    ref: 'ApplyJob',
+    localField: '_id',
+    foreignField: 'job'
+})
+
+JobSchema.set('toObject', { virtuals: true })
+JobSchema.set('toJSON', { virtuals: true })
+
 export default model('Job', JobSchema) as Model<JobDocument>
