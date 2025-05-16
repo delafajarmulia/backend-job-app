@@ -1,10 +1,13 @@
 import { compare, hash } from "bcrypt";
-import { Model, model, ObjectId, Schema } from "mongoose";
+import { Model, model, ObjectId, Schema, Types } from "mongoose";
+import { ApplyJobDocument } from "./ApplyJob";
 
-interface userDocument {
+export interface userDocument {
     name: string,
     email: string,
     password: string
+
+    applyJobs?: Types.DocumentArray<ApplyJobDocument>
 }
 
 interface Methods {

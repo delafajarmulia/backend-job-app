@@ -1,7 +1,20 @@
 import mongoose, { Model, model, Schema, Types } from "mongoose"; 
 
-interface ApplyJobDocument {
-    job: Types.ObjectId;
+export interface ApplyJobDocument{
+    job: Types.ObjectId | {
+        _id: Types.ObjectId;
+        title: string;
+        description: string;
+        category: string;
+        salary: string;
+        jobType: string;
+        benefits: string;
+        requirements: string;
+        city: string;
+        address: string;
+        phone: string;
+        remote: boolean;
+    };
     user: Types.ObjectId;
     fullname: string;
     resumeUrl: string;

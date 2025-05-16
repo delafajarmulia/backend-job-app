@@ -1,6 +1,9 @@
 import { Request, Response } from "express"
 import Job from "../models/Job"
 import Category from "../models/Category"
+import { AuthRequest } from "../utils/types"
+import User, { userDocument } from "../models/User"
+import { model, Types } from "mongoose"
 
 export const createJob = async(req: Request, res: Response) => {
     const newJob = req.body
@@ -88,4 +91,81 @@ export const deleteJob = async(req: Request, res: Response) => {
     const jobDeleted = await Job.findByIdAndDelete(jobId)
     
     res.status(200).json({ message: 'Berhasil hapus pekerjaan.'})
+}
+
+export const getAllJobsByOwner = async(req: AuthRequest<any, any, any, any>, res: Response) => {
+    const user = await User.findById(req.user.id)
+                    .populate({
+                        path: 'applyJobs',
+                        populate: {
+                            path: 'job',
+                            model: 'Job'
+                        }
+                    }) as userDocument || null;
+
+    if(!user){
+        res.status(404).json({ message: 'tak de' })
+    }
+
+    const appliedJobs = user.applyJobs ?? [];
+    interface JobSummary {
+        _id: string;
+        title: string;
+        description: string;
+        category: string;
+        salary: string;
+        jobType: string;
+        benefits: string;
+        requirements: string;
+        city: string;
+        address: string;
+        phone: string;
+        remote: boolean;
+    }
+
+    const result: JobSummary[] = appliedJobs
+        .filter(app => app.job && typeof app.job !== 'string' && 'title' in app.job)
+        .map(app => {
+            const job = app.job as {
+                _id: Types.ObjectId;
+                title: string;
+                description: string;
+                category: string;
+                salary: string;
+                jobType: string;
+                benefits: string;
+                requirements: string;
+                city: string;
+                address: string;
+                phone: string;
+                remote: boolean;
+                owner: Types.ObjectId;
+                createdAt: Date;
+                updatedAt: Date;
+            };
+
+            return {
+                _id: job._id.toString(),
+                title: job.title,
+                description: job.description,
+                category: job.category,
+                salary: job.salary,
+                jobType: job.jobType,
+                benefits: job.benefits,
+                requirements: job.requirements,
+                city: job.city,
+                address: job.address,
+                phone: job.phone,
+                remote: job.remote,
+                owner: req.user.id,
+                createdAt: job.createdAt,
+                updatedAt: job.updatedAt
+            };
+        });
+
+    res.status(200).json({
+        message: 'List job owner',
+        jobs: result
+    })
+    return
 }

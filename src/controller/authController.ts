@@ -77,7 +77,6 @@ export const loginUser = async (req: Request, res: Response) => {
 };
 
 export const getUser = async(req: AuthRequest<any, any, any, any>, res: Response) => {
-    // const id = req.user;
     res.status(200).send(req.user)
     return
 }
