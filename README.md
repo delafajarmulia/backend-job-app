@@ -39,15 +39,11 @@ Dokumentasi lengkap tersedia di Postman:
    ```sh
    npm install
    ```
-3. **Konfigurasi file environment**:
-   ```sh
-   cp .env.example .env
-   ```
-4. **Jalankan aplikasi**:
+3. **Jalankan aplikasi**:
    ```sh
    npm run dev
    ```
-5. **Akses API melalui**:
+4. **Akses API melalui**:
    ```sh
    http://localhost:8000/api/v1
    ```
